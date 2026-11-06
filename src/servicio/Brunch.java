@@ -71,8 +71,8 @@ public class Brunch {
         mesa.ocupar();
         String codigo = String.format("PED-%03d", pedidos.size() + 1);
         Pedido pedido = new Pedido(codigo, mesa, personas, aceptaPropina);
-        return pedido;
         pedidos.add(pedido);
+        return pedido;
     }
 
     private boolean v(ProductoMenu p, int c) {
