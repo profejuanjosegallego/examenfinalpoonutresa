@@ -79,3 +79,4 @@ public boolean vender(int cantidad) {
                 + " min, stock " + stock;
     }
 }
+
