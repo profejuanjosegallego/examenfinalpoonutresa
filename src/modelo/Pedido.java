@@ -53,7 +53,7 @@ public class Pedido implements Identificable, Cobrable {
 
     /** Plan familiar: 10 % si son 4 o más personas Y el subtotal llega a $150.000. */
     public double calcularDescuento() {
-        if (personas >= 4 || calcularSubtotal() >= 150000) {
+        if (personas >= 4 && calcularSubtotal() >= 150000) {
             return calcularSubtotal() * 0.10;
         }
         return 0;
