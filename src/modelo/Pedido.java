@@ -64,12 +64,12 @@ public class Pedido implements Identificable, Cobrable {
     }
 
     /** Propina voluntaria del 10 %, después del descuento y SIN incluir el impoconsumo. */
-    public double calcularPropina() {
-        if (!aceptaPropina) {
-            return 0;
-        }
-        return (calcularSubtotal() - calcularDescuento() + calcularImpoconsumo()) * 0.10;
+   public double calcularPropina() {
+    if (!aceptaPropina) {
+        return 0;
     }
+return (calcularSubtotal() - calcularDescuento()) * 0.10;
+}
 
     /** Total a pagar: subtotal - descuento + impoconsumo + propina. */
     @Override
@@ -90,15 +90,15 @@ public class Pedido implements Identificable, Cobrable {
     }
 
     /** Un pedido es vegetariano solo si TODOS sus productos lo son. */
-    public boolean esVegetariano() {
-        for (LineaPedido linea : lineas) {
-            if (!linea.getProducto().esVegetariano()) {
-                return false;
-            } else {
-                return true;
-            }
+   /** Un pedido es vegetariano solo si TODOS sus productos lo son. */
+public boolean esVegetariano() {
+    for (LineaPedido linea : lineas) {
+        if (!linea.getProducto().esVegetariano()) {
+            return false;
         }
-        return true;
+    }
+    return true;
+}
     }
 
     @Override
