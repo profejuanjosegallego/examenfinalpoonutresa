@@ -21,3 +21,99 @@
 | 13 | `modelo/Pedido.java` | 49 | `variable total might not have been initialized` | `double total;` → `double total = 0;` |
 | 14 | `modelo/Pedido.java` | 84 | `';' expected` | `for (int i = 0, i < lineas.size(), i++)` → `for (int i = 0; i < lineas.size(); i++)` |
 | 15 | `modelo/PlatoFuerte.java` | 11 | `constructor ProductoMenu in class ProductoMenu cannot be applied to given types` | `super(codigo, nombre, precioBase);` → `super(codigo, nombre, precioBase, stock);` |
+
+## 2. Errores de lógica corregidos
+
+| # | Archivo y método | Qué hacía mal | Pista (fila de la tabla) | Cómo lo corregimos |
+|---|------------------|---------------|--------------------------|--------------------|
+| 1 | `ProductoMenu` · atributo `stock` | Era `static`: un solo stock compartido por **todos** los productos, así que cada `new` lo sobrescribía y todos mostraban `stock 5` (el último creado). Por eso casi nada se podía vender | Sección 1, stock (`8, 6, 10…`); sección 4, `Quedan de chocolate 16` | `private static int stock;` → `private int stock;` (cada objeto tiene el suyo) |
+| 2 | `ProductoMenu.setDisponible()` | `disponible = disponible;` asigna el parámetro a sí mismo: el atributo nunca cambiaba | Sección 2, arepa después del chócolo debe dar `false` | `this.disponible = disponible;` |
+| 3 | `Bebida.calcularPrecio()` | Usaba `>` y el comentario dice «500 ml **o más**»: el jugo de 500 ml no cobraba el recargo | Sección 1, jugo de mandarina `$11500` | `mililitros > …` → `mililitros >= MILILITROS_TAMANO_GRANDE` |
+| 4 | `LineaPedido.calcularPrecio()` | `sumaAdiciones = …` reemplazaba en vez de acumular: solo contaba la última adición | Sección 7, `LineaPedido $79000`; subtotal familia `$184500` | `sumaAdiciones += a.calcularPrecio();` |
+| 5 | `Pedido.calcularDescuento()` | Usaba `||` y la regla dice «4 o más personas **Y** subtotal ≥ $150.000»: los amigos (4 personas, $108.000) recibían descuento | Sección 5, amigos descuento `$0` | `||` → `&&` |
+| 6 | `Pedido.calcularImpoconsumo()` | Calculaba el 8 % sobre el subtotal, no sobre lo que queda después del descuento | Sección 5, familia impoconsumo `$13284` | `(calcularSubtotal() - calcularDescuento()) * 0.08` |
+| 7 | `Pedido.calcularPropina()` | Sumaba el impoconsumo a la base, y la regla dice «SIN incluir el impoconsumo» | Sección 5, familia propina `$16605`, pareja `$7400` | `(calcularSubtotal() - calcularDescuento()) * 0.10` |
+| 8 | `Pedido.esVegetariano()` | El `else { return true; }` salía del ciclo en la **primera** línea: solo revisaba el primer producto | Sección 4, amigos `false` (el primer producto, huevos pericos, sí es vegetariano) | Se quitó el `else`; el `return true` queda solo después del `for` |
+| 9 | `Brunch.buscarProducto()` | Comparaba `String` con `==` (compara referencias, no contenido) y además debía ignorar mayúsculas | Sección 2, `Buscar pan-001: Pandequeso` | `p.getCodigo().equalsIgnoreCase(codigo)` |
+| 10 | `Brunch.cerrarPedido()` | Marcaba el pedido como pagado pero no liberaba la mesa, como pide el comentario | Sección 6, `¿Mesa 3 libre? true` y `¿Abrió el siguiente grupo? true` | Se agregó `pedido.getMesa().liberar();` |
+
+## 4. Salida final del programa
+
+Salida de la fase 2 (`java -cp out Main`), coincide fila por fila con la tabla de resultados esperados:
+
+```text
+=== 1. Carta del domingo ===
+  - Plato fuerte [PLA-001] Calentado paisa - $26000, 20 min, stock 8
+  - Plato fuerte [PLA-002] Calentado con chicharrón - $32000, 25 min, stock 6
+  - Plato fuerte [PLA-003] Huevos pericos con arepa - $18000, 20 min, stock 10
+  - Plato fuerte [PLA-004] Arepa de chócolo con quesito - $16000, 20 min, stock 5
+  - Bebida [BEB-001] Tinto de Jardín - $5000, 4 min, stock 30
+  - Bebida [BEB-002] Chocolate en leche - $7000, 4 min, stock 20
+  - Bebida [BEB-003] Jugo de mandarina - $11500, 6 min, stock 15
+  - Bebida [BEB-004] Limonada de coco - $10000, 6 min, stock 15
+  - Panadería [PAN-001] Pandequeso - $7000, 12 min, stock 12
+  - Panadería [PAN-002] Buñuelo - $9000, 3 min, stock 5
+
+=== 2. Búsquedas y disponibilidad ===
+Buscar pan-001: Pandequeso
+Buscar XXX-999: no encontrado
+¿Se puede vender 1 arepa? true
+Se acabó el chócolo. ¿Se puede vender 1 arepa? false
+
+=== 3. Mesas ===
+¿La mesa 3 recibe a 6 personas? true
+¿La mesa 3 recibe a 7 personas? false
+
+=== 4. Pedidos ===
+No se puede vender 1 de PLA-004.
+¿Se vendió la arepa no disponible? false
+No se puede vender 6 de PAN-002.
+¿Se vendieron 6 buñuelos? false
+¿Se vendieron 2 buñuelos? true
+La mesa 9 no existe.
+¿Se abrió el pedido de la mesa 9? false
+La mesa 3 no puede recibir a 2 personas.
+¿Se abrió otro pedido en la mesa 3? false
+Comanda de la familia:
+  - 2 x Calentado con chicharrón + Aguacate + Quesito -> Cocina
+  - 2 x Huevos pericos con arepa -> Cocina
+  - 4 x Chocolate en leche -> Barra
+  - 3 x Jugo de mandarina -> Barra
+  - 1 x Pandequeso -> Horno
+Quedan de chocolate: 16
+Quedan de buñuelo: 3
+Pedido de amigos, ¿vegetariano? false
+Pedido de pareja, ¿vegetariano? true
+
+=== 5. Cuentas ===
+Pedido [PED-001] mesa 3, 4 personas, 25 min, total $195939
+Subtotal $184500 | Descuento $18450 | Impoconsumo $13284 | Propina $16605 | Total $195939
+Pedido [PED-002] mesa 2, 4 personas, 20 min, total $116640
+Subtotal $108000 | Descuento $0 | Impoconsumo $8640 | Propina $0 | Total $116640
+Pedido [PED-003] mesa 1, 2 personas, 20 min, total $87320
+Subtotal $74000 | Descuento $0 | Impoconsumo $5920 | Propina $7400 | Total $87320
+
+=== 6. Cierre del día ===
+¿Se cerró la familia? true
+¿Se cerró dos veces? false
+¿Se cerró la pareja? true
+¿La mesa 3 quedó libre? true
+¿Se abrió el siguiente grupo en la mesa 3? true
+Pedidos abiertos en el día: 4
+Ventas del día: $283259
+
+=== 7. Polimorfismo ===
+Como Identificable: PED-001
+Panaderia vale $7000
+Adicion vale $3500
+LineaPedido vale $79000
+Pedido vale $87320
+```
+
+## 5. Conceptos de POO en este proyecto
+
+- **Encapsulamiento:**
+- **Herencia:**
+- **Abstracción:**
+- **Interfaz:**
+- **Polimorfismo:**
