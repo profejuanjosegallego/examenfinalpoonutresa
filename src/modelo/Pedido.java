@@ -38,13 +38,13 @@ public class Pedido implements Identificable, Cobrable {
         }
     }
 
-    public void marcarPagado() {
-        pagado = true;
+    public void marcarPagado(boolean pagado) {
+       pagado = true;
     }
 
     /** Suma lo que vale cada línea, antes de descuentos e impuestos. */
     public double calcularSubtotal() {
-        double total;
+        double total = 0.0;
         for (LineaPedido linea : lineas) {
             total += linea.calcularPrecio();
         }
@@ -81,7 +81,7 @@ public class Pedido implements Identificable, Cobrable {
     /** El pedido sale cuando termina el producto MÁS demorado (la cocina trabaja en paralelo). */
     public int calcularTiempoEstimado() {
         int mayor = 0;
-        for (int i = 0, i < lineas.size(), i++) {
+        for (int i = 0; i < lineas.size(); i++) {
             int minutos = lineas.get(i).getProducto().minutosPreparacion();
             if (minutos > mayor) {
                 mayor = minutos;
