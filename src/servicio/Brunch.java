@@ -49,14 +49,14 @@ public class Brunch {
     }
 
     /** Retorna la mesa con ese número o null si no existe. */
-    public Mesa buscarMesa(int numero) {
-        for (Mesa m : mesas) {
-            if (m.getNumero() == numero) {
-                return m;
-            }
+   public Mesa buscarMesa(int numero) {
+    for (Mesa m : mesas) {
+        if (m.getNumero() == numero) {
+            return m;
         }
     }
-
+    return null;
+}
     /** Abre la cuenta SOLO si la mesa existe y puede recibir al grupo. Ocupa la mesa. */
     public Pedido abrirPedido(int numeroMesa, int personas, boolean aceptaPropina) {
         Mesa mesa = buscarMesa(numeroMesa);
