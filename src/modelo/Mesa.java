@@ -19,7 +19,7 @@ public class Mesa {
     public boolean puedeRecibir(int personas) {
         return !ocupada && personas > 0 && personas <= capacidad;
     }
-
+ 
     public void ocupar() {
         ocupada = true;
     }

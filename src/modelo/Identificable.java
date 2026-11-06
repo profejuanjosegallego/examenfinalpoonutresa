@@ -6,3 +6,4 @@ public interface Identificable {
 
     String obtenerFicha();
 }
+  
