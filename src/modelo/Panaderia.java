@@ -28,7 +28,7 @@ public class Panaderia extends ProductoMenu {
 
     @Override
     public String getCategoria() {
-        return "Panadería;
+        return "Panadería";
     }
 
     @Override
