@@ -41,4 +41,9 @@ public class Bebida extends ProductoMenu {
     public boolean esVegetariano() {
         return true;
     }
+
+    @Override
+public String obtenerEstacion() {
+    return "Barra";
+}
 }
