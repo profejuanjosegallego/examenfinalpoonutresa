@@ -44,7 +44,7 @@ public class Pedido implements Identificable, Cobrable {
 
     /** Suma lo que vale cada línea, antes de descuentos e impuestos. */
     public double calcularSubtotal() {
-        double total;
+        double total = 0;
         for (LineaPedido linea : lineas) {
             total += linea.calcularPrecio();
         }
