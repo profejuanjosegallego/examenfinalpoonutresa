@@ -31,16 +31,16 @@ public class LineaPedido implements Cobrable {
     public double calcularPrecio() {
         double sumaAdiciones = 0;
         for (Adicion a : adiciones) {
-            sumaAdiciones = a.calcularPrecio();
+            sumaAdiciones += a.calcularPrecio();
         }
         return (producto.calcularPrecio() + sumaAdiciones) * cantidad;
     }
 
     /** Dónde se prepara: los platos en Cocina, las bebidas en Barra y la panadería en Horno. */
  public String obtenerEstacion() {
-    return producto.obtenerEstacion();
+    return producto.getCategoria();
 }
-    }
+    
 
     public String obtenerComanda() {
         String texto = cantidad + " x " + producto.getNombre();

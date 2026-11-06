@@ -25,7 +25,7 @@ public class Bebida extends ProductoMenu {
         }
         return super.calcularPrecio();
     }
-    }
+    
 
     /** Las calientes salen en 4 minutos; las frías, en 6. */
     @Override

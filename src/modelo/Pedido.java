@@ -60,7 +60,7 @@ public class Pedido implements Identificable, Cobrable {
 
     /** Impoconsumo del 8 % sobre lo que queda después del descuento. */
     public double calcularImpoconsumo() {
-        return calcularSubtotal() * 0.08;
+        return (calcularSubtotal() - calcularDescuento()) * 0.08;
     }
 
     /** Propina voluntaria del 10 %, después del descuento y SIN incluir el impoconsumo. */
@@ -99,7 +99,7 @@ public boolean esVegetariano() {
     }
     return true;
 }
-    }
+    
 
     @Override
     public String obtenerFicha() {
