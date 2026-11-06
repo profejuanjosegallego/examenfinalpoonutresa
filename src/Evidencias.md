@@ -1,4 +1,4 @@
-# Evidencias: equipo <apellido 1>, <apellido 2>, <apellido 3>
+# Evidencias: equipo <Andrés Vélez Hurtado>, <Jorge Alexander Chaves Rivero>, <Jorge Andrés Ávila Rodriguez>
 
 **Integrantes:** <los tres nombres completos>
 

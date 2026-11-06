@@ -41,7 +41,7 @@ public class Brunch {
     /** Busca por código sin importar mayúsculas o minúsculas: "pan-001" encuentra a "PAN-001". */
     public ProductoMenu buscarProducto(String codigo) {
         for (ProductoMenu p : menu) {
-            if (p.getCodigo() == codigo) {
+            if (p.getCodigo().equalsIgnoreCase(codigo)) {
                 return p;
             }
         }
@@ -104,7 +104,8 @@ public class Brunch {
         if (pedido == null || pedido.isPagado()) {
             return false;
         }
-        pedido.isPagado();
+        pedido.marcarPagado();
+        pedido.getMesa().liberar();
         return true;
     }
 
