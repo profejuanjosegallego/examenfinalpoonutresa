@@ -9,7 +9,7 @@ public class Pedido implements Identificable, Cobrable {
     private final int personas;
     private final boolean aceptaPropina;
     private final ArrayList<LineaPedido> lineas;
-    private final boolean pagado;
+    private boolean pagado;
 
     public Pedido(String codigo, Mesa mesa, int personas, boolean aceptaPropina) {
         this.codigo = codigo;
@@ -37,9 +37,8 @@ public class Pedido implements Identificable, Cobrable {
             lineas.add(linea);
         }
     }
-
     public void marcarPagado() {
-        pagado = true;
+    pagado = true;
     }
 
     /** Suma lo que vale cada línea, antes de descuentos e impuestos. */
