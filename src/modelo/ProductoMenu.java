@@ -5,7 +5,7 @@ public abstract class ProductoMenu implements Identificable, Cobrable {
     private final String codigo;
     private String nombre;
     private double precioBase;
-    private static int stock;
+    private int stock;
     private boolean disponible;
 
     public ProductoMenu(String codigo, String nombre, double precioBase, int stock) {
@@ -43,38 +43,33 @@ public abstract class ProductoMenu implements Identificable, Cobrable {
         this.precioBase = precioBase;
     }
 
-    /** Permite sacar un producto de la carta del día o volverlo a ofrecer. */
     public void setDisponible(boolean disponible) {
-        disponible = disponible;
+        this.disponible = disponible;
     }
 
-    /** Se puede vender si está disponible, la cantidad es válida y alcanza el stock. */
     public boolean puedeVender(int cantidad) {
         return disponible && cantidad > 0 && cantidad <= stock;
     }
 
-    /** Descuenta del stock SOLO si se puede vender. */
-    public boolean vender(int cantidad) {
-        if (!puedeVender(cantidad)) {
-            return false;
-        }
-        stock -= cantidad;
-        return true;
+public boolean vender(int cantidad) {
+    if (!puedeVender(cantidad)) {
+        return false;
     }
-
-    /** Precio de venta de una unidad del producto. Las clases hijas pueden ajustarlo. */
+    stock -= cantidad;    
+    if (stock == 0) {
+        this.disponible = false;
+    }
+    return true;
+}
     @Override
     public double calcularPrecio() {
         return precioBase;
     }
 
-    /** Minutos que tarda en salir el producto. */
     public abstract int minutosPreparacion();
 
-    /** "Plato fuerte", "Bebida" o "Panadería". */
     public abstract String getCategoria();
 
-    /** true si el producto no lleva carne. */
     public abstract boolean esVegetariano();
 
     @Override
@@ -84,3 +79,4 @@ public abstract class ProductoMenu implements Identificable, Cobrable {
                 + " min, stock " + stock;
     }
 }
+

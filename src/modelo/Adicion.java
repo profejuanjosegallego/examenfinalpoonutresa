@@ -1,7 +1,6 @@
 package modelo;
 
-/** Lo que se le suma a un producto: aguacate, quesito... No está en la carta. */
-public class Adicion implement Cobrable {
+public class Adicion implements Cobrable {
     private final String nombre;
     private final double precio;
 
@@ -16,4 +15,4 @@ public class Adicion implement Cobrable {
     public double calcularPrecio() {
         return precio;
     }
-}
+}   

@@ -2,14 +2,13 @@ package modelo;
 
 import java.util.ArrayList;
 
-/** Un renglón de la cuenta: un producto, cuántos se piden y sus adiciones. */
 public class LineaPedido implements Cobrable {
     private final ProductoMenu producto;
     private final int cantidad;
     private final ArrayList<Adicion> adiciones;
 
     public LineaPedido(ProductoMenu producto, int cantidad) {
-        if (producto = null) {
+        if (producto == null) {
             throw new IllegalArgumentException("La línea necesita un producto");
         }
         this.producto = producto;
@@ -26,17 +25,15 @@ public class LineaPedido implements Cobrable {
         }
     }
 
-    /** CADA unidad lleva sus adiciones: (precio del producto + adiciones) × cantidad. */
     @Override
-    double calcularPrecio() {
+    public double calcularPrecio() {
         double sumaAdiciones = 0;
         for (Adicion a : adiciones) {
-            sumaAdiciones = a.calcularPrecio();
+            sumaAdiciones += a.calcularPrecio();
         }
         return (producto.calcularPrecio() + sumaAdiciones) * cantidad;
     }
 
-    /** Dónde se prepara: los platos en Cocina, las bebidas en Barra y la panadería en Horno. */
     public String obtenerEstacion() {
         if (producto instanceof PlatoFuerte) {
             return "Cocina";
