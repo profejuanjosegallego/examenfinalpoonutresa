@@ -8,7 +8,7 @@ public class PlatoFuerte extends ProductoMenu {
 
     public PlatoFuerte(String codigo, String nombre, double precioBase, int stock,
                        boolean vegetariano, boolean conProteinaExtra) {
-        super(codigo, nombre, precioBase);
+        super(codigo, nombre, precioBase, stock);
         this.vegetariano = vegetariano;
         this.conProteinaExtra = conProteinaExtra;
     }
@@ -34,7 +34,10 @@ public class PlatoFuerte extends ProductoMenu {
     public String getCategoria() {
         return "Plato fuerte";
     }
-
+    @Override
+    public String getEstacion() {
+        return "Cocina";
+    }
     @Override
     public boolean esVegetariano() {
         return vegetariano;
