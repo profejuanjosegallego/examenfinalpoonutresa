@@ -4,12 +4,18 @@ import java.util.ArrayList;
 
 /** La cuenta de una mesa. */
 public class Pedido implements Identificable, Cobrable {
+    public static final int PERSONAS_PLAN_FAMILIAR = 4;
+    public static final double SUBTOTAL_PLAN_FAMILIAR = 150000;
+    public static final double PORCENTAJE_DESCUENTO_FAMILIAR = 0.10;
+    public static final double PORCENTAJE_IMPOCONSUMO = 0.08;
+    public static final double PORCENTAJE_PROPINA = 0.10;
+
     private final String codigo;
     private final Mesa mesa;
     private final int personas;
     private final boolean aceptaPropina;
     private final ArrayList<LineaPedido> lineas;
-    private final boolean pagado;
+    private boolean pagado;
 
     public Pedido(String codigo, Mesa mesa, int personas, boolean aceptaPropina) {
         this.codigo = codigo;
@@ -44,7 +50,7 @@ public class Pedido implements Identificable, Cobrable {
 
     /** Suma lo que vale cada línea, antes de descuentos e impuestos. */
     public double calcularSubtotal() {
-        double total;
+        double total = 0;
         for (LineaPedido linea : lineas) {
             total += linea.calcularPrecio();
         }
@@ -53,15 +59,20 @@ public class Pedido implements Identificable, Cobrable {
 
     /** Plan familiar: 10 % si son 4 o más personas Y el subtotal llega a $150.000. */
     public double calcularDescuento() {
-        if (personas >= 4 || calcularSubtotal() >= 150000) {
-            return calcularSubtotal() * 0.10;
+        if (personas >= PERSONAS_PLAN_FAMILIAR && calcularSubtotal() >= SUBTOTAL_PLAN_FAMILIAR) {
+            return calcularSubtotal() * PORCENTAJE_DESCUENTO_FAMILIAR;
         }
         return 0;
     }
 
+    /** Valor sobre el que se calculan impoconsumo y propina: subtotal menos descuento. */
+    private double calcularBaseGravable() {
+        return calcularSubtotal() - calcularDescuento();
+    }
+
     /** Impoconsumo del 8 % sobre lo que queda después del descuento. */
     public double calcularImpoconsumo() {
-        return calcularSubtotal() * 0.08;
+        return calcularBaseGravable() * PORCENTAJE_IMPOCONSUMO;
     }
 
     /** Propina voluntaria del 10 %, después del descuento y SIN incluir el impoconsumo. */
@@ -69,7 +80,7 @@ public class Pedido implements Identificable, Cobrable {
         if (!aceptaPropina) {
             return 0;
         }
-        return (calcularSubtotal() - calcularDescuento() + calcularImpoconsumo()) * 0.10;
+        return calcularBaseGravable() * PORCENTAJE_PROPINA;
     }
 
     /** Total a pagar: subtotal - descuento + impoconsumo + propina. */
@@ -81,7 +92,7 @@ public class Pedido implements Identificable, Cobrable {
     /** El pedido sale cuando termina el producto MÁS demorado (la cocina trabaja en paralelo). */
     public int calcularTiempoEstimado() {
         int mayor = 0;
-        for (int i = 0, i < lineas.size(), i++) {
+        for (int i = 0; i < lineas.size(); i++) {
             int minutos = lineas.get(i).getProducto().minutosPreparacion();
             if (minutos > mayor) {
                 mayor = minutos;
@@ -95,8 +106,6 @@ public class Pedido implements Identificable, Cobrable {
         for (LineaPedido linea : lineas) {
             if (!linea.getProducto().esVegetariano()) {
                 return false;
-            } else {
-                return true;
             }
         }
         return true;

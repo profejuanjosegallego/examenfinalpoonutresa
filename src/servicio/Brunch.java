@@ -23,7 +23,7 @@ public class Brunch {
     public int getCantidadPedidos() { return pedidos.size(); }
 
     public ArrayList<ProductoMenu> getMenu() {
-        return menu;
+        return new ArrayList<>(menu);
     }
 
     public void agregarAlMenu(ProductoMenu producto) {
@@ -41,7 +41,7 @@ public class Brunch {
     /** Busca por código sin importar mayúsculas o minúsculas: "pan-001" encuentra a "PAN-001". */
     public ProductoMenu buscarProducto(String codigo) {
         for (ProductoMenu p : menu) {
-            if (p.getCodigo() == codigo) {
+            if (p.getCodigo().equalsIgnoreCase(codigo)) {
                 return p;
             }
         }
@@ -55,6 +55,7 @@ public class Brunch {
                 return m;
             }
         }
+        return null;
     }
 
     /** Abre la cuenta SOLO si la mesa existe y puede recibir al grupo. Ocupa la mesa. */
@@ -71,24 +72,18 @@ public class Brunch {
         mesa.ocupar();
         String codigo = String.format("PED-%03d", pedidos.size() + 1);
         Pedido pedido = new Pedido(codigo, mesa, personas, aceptaPropina);
-        return pedido;
         pedidos.add(pedido);
+        return pedido;
     }
 
-    private boolean v(ProductoMenu p, int c) {
-        boolean r;
-        if (p != null && p.puedeVender(c) == true) {
-            r = true;
-        } else {
-            r = false;
-        }
-        return r;
+    private boolean hayProductoVendible(ProductoMenu producto, int cantidad) {
+        return producto != null && producto.puedeVender(cantidad);
     }
 
     /** Agrega el producto SOLO si se puede vender, y lo descuenta del stock. */
     public LineaPedido agregarAlPedido(Pedido pedido, String codigoProducto, int cantidad) {
         ProductoMenu producto = buscarProducto(codigoProducto);
-        if (!v(producto, cantidad)) {
+        if (!hayProductoVendible(producto, cantidad)) {
             System.out.println("No se puede vender " + cantidad + " de " + codigoProducto + ".");
             return null;
         }
@@ -104,6 +99,7 @@ public class Brunch {
             return false;
         }
         pedido.marcarPagado();
+        pedido.getMesa().liberar();
         return true;
     }
 
