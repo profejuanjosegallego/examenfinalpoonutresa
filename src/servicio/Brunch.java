@@ -41,7 +41,7 @@ public class Brunch {
     /** Busca por código sin importar mayúsculas o minúsculas: "pan-001" encuentra a "PAN-001". */
     public ProductoMenu buscarProducto(String codigo) {
         for (ProductoMenu p : menu) {
-            if (p.getCodigo() == codigo) {
+            if (codigo != null && p.getCodigo().equalsIgnoreCase(codigo)) {
                 return p;
             }
         }
@@ -51,13 +51,14 @@ public class Brunch {
     /** Retorna la mesa con ese número o null si no existe. */
     public Mesa buscarMesa(int numero) {
         for (Mesa m : mesas) {
-            if (m.getNumero() == numero) {
+            if (Integer.parseInt(m.getNumero()) == numero) {
                 return m;
             }
         }
+        return null;
     }
-
     /** Abre la cuenta SOLO si la mesa existe y puede recibir al grupo. Ocupa la mesa. */
+
     public Pedido abrirPedido(int numeroMesa, int personas, boolean aceptaPropina) {
         Mesa mesa = buscarMesa(numeroMesa);
         if (mesa == null) {
@@ -71,17 +72,13 @@ public class Brunch {
         mesa.ocupar();
         String codigo = String.format("PED-%03d", pedidos.size() + 1);
         Pedido pedido = new Pedido(codigo, mesa, personas, aceptaPropina);
-        return pedido;
         pedidos.add(pedido);
+        return pedido;
     }
 
     private boolean v(ProductoMenu p, int c) {
         boolean r;
-        if (p != null && p.puedeVender(c) == true) {
-            r = true;
-        } else {
-            r = false;
-        }
+        r = p != null && p.puedeVender(c) == true;
         return r;
     }
 
@@ -104,6 +101,7 @@ public class Brunch {
             return false;
         }
         pedido.marcarPagado();
+        pedido.getMesa().liberar();
         return true;
     }
 
