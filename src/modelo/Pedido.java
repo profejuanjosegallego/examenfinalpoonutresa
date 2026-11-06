@@ -81,7 +81,7 @@ public class Pedido implements Identificable, Cobrable {
     /** El pedido sale cuando termina el producto MÁS demorado (la cocina trabaja en paralelo). */
     public int calcularTiempoEstimado() {
         int mayor = 0;
-        for (int i = 0, i < lineas.size(); i++) {
+        for (int i = 0; i < lineas.size(); i++) {
             int minutos = lineas.get(i).getProducto().minutosPreparacion();
             if (minutos > mayor) {
                 mayor = minutos;
