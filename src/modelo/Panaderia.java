@@ -32,6 +32,11 @@ public class Panaderia extends ProductoMenu {
     }
 
     @Override
+    public String obtenerEstacion() {
+        return "Horno";
+    }
+
+    @Override
     public boolean esVegetariano() {
         return true;
     }

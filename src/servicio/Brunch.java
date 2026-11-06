@@ -23,7 +23,7 @@ public class Brunch {
     public int getCantidadPedidos() { return pedidos.size(); }
 
     public ArrayList<ProductoMenu> getMenu() {
-        return menu;
+        return new ArrayList<>(menu);
     }
 
     public void agregarAlMenu(ProductoMenu producto) {
@@ -76,20 +76,14 @@ public class Brunch {
         return pedido;
     }
 
-    private boolean v(ProductoMenu p, int c) {
-        boolean r;
-        if (p != null && p.puedeVender(c) == true) {
-            r = true;
-        } else {
-            r = false;
-        }
-        return r;
+    private boolean hayProductoVendible(ProductoMenu producto, int cantidad) {
+        return producto != null && producto.puedeVender(cantidad);
     }
 
     /** Agrega el producto SOLO si se puede vender, y lo descuenta del stock. */
     public LineaPedido agregarAlPedido(Pedido pedido, String codigoProducto, int cantidad) {
         ProductoMenu producto = buscarProducto(codigoProducto);
-        if (!v(producto, cantidad)) {
+        if (!hayProductoVendible(producto, cantidad)) {
             System.out.println("No se puede vender " + cantidad + " de " + codigoProducto + ".");
             return null;
         }

@@ -36,6 +36,11 @@ public class PlatoFuerte extends ProductoMenu {
     }
 
     @Override
+    public String obtenerEstacion() {
+        return "Cocina";
+    }
+
+    @Override
     public boolean esVegetariano() {
         return vegetariano;
     }
