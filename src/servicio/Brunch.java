@@ -38,26 +38,24 @@ public class Brunch {
         }
     }
 
-    /** Busca por código sin importar mayúsculas o minúsculas: "pan-001" encuentra a "PAN-001". */
     public ProductoMenu buscarProducto(String codigo) {
         for (ProductoMenu p : menu) {
-            if (p.getCodigo() == codigo) {
+            if (p.getCodigo().equalsIgnoreCase(codigo)) {
                 return p;
             }
         }
         return null;
     }
 
-    /** Retorna la mesa con ese número o null si no existe. */
     public Mesa buscarMesa(int numero) {
         for (Mesa m : mesas) {
             if (m.getNumero() == numero) {
                 return m;
             }
         }
+        return null;
     }
 
-    /** Abre la cuenta SOLO si la mesa existe y puede recibir al grupo. Ocupa la mesa. */
     public Pedido abrirPedido(int numeroMesa, int personas, boolean aceptaPropina) {
         Mesa mesa = buscarMesa(numeroMesa);
         if (mesa == null) {
@@ -71,8 +69,8 @@ public class Brunch {
         mesa.ocupar();
         String codigo = String.format("PED-%03d", pedidos.size() + 1);
         Pedido pedido = new Pedido(codigo, mesa, personas, aceptaPropina);
-        return pedido;
         pedidos.add(pedido);
+        return pedido;
     }
 
     private boolean v(ProductoMenu p, int c) {
@@ -85,7 +83,6 @@ public class Brunch {
         return r;
     }
 
-    /** Agrega el producto SOLO si se puede vender, y lo descuenta del stock. */
     public LineaPedido agregarAlPedido(Pedido pedido, String codigoProducto, int cantidad) {
         ProductoMenu producto = buscarProducto(codigoProducto);
         if (!v(producto, cantidad)) {
@@ -98,7 +95,6 @@ public class Brunch {
         return linea;
     }
 
-    /** Cobra el pedido y deja la mesa libre para el siguiente grupo. */
     public boolean cerrarPedido(Pedido pedido) {
         if (pedido == null || pedido.isPagado()) {
             return false;
@@ -107,7 +103,6 @@ public class Brunch {
         return true;
     }
 
-    /** Suma lo que pagaron los pedidos YA cerrados. Una cuenta abierta todavía no es venta. */
     public double calcularVentasDelDia() {
         double total = 0;
         for (Pedido p : pedidos) {
