@@ -28,9 +28,9 @@ public class Bebida extends ProductoMenu {
 
     /** Las calientes salen en 4 minutos; las frías, en 6. */
     @Override
-    public double minutosPreparacion() {
-        return caliente ? 4 : 6;
-    }
+    public int minutosPreparacion() {
+    return caliente ? 4 : 6;
+}
 
     @Override
     public String getCategoria() {
