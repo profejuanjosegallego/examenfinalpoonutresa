@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import modelo.Adicion;
+import modelo.Bebida;
 import modelo.Cobrable;
 import modelo.Identificable;
 import modelo.LineaPedido;
@@ -14,17 +15,17 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("=== 1. Carta del domingo ===");
         Brunch brunch = new Brunch("El Brunch POO");
-        //                                   código     nombre  precio stock vegetariano proteínaExtra
+        //                              código    nombre  precio stock vegetariano proteínaExtra
         brunch.agregarAlMenu(new PlatoFuerte("PLA-001", "Calentado paisa", 26000, 8, false, false));
         brunch.agregarAlMenu(new PlatoFuerte("PLA-002", "Calentado con chicharrón", 26000, 6, false, true));
         brunch.agregarAlMenu(new PlatoFuerte("PLA-003", "Huevos pericos con arepa", 18000, 10, true, false));
         brunch.agregarAlMenu(new PlatoFuerte("PLA-004", "Arepa de chócolo con quesito", 16000, 5, true, false));
-        //                              código     nombre  precio stock mililitros caliente
+        //                              código    nombre  precio stock mililitros caliente
         brunch.agregarAlMenu(new Bebida("BEB-001", "Tinto de Jardín", 5000, 30, 250, true));
         brunch.agregarAlMenu(new Bebida("BEB-002", "Chocolate en leche", 7000, 20, 300, true));
         brunch.agregarAlMenu(new Bebida("BEB-003", "Jugo de mandarina", 9000, 15, 500, false));
         brunch.agregarAlMenu(new Bebida("BEB-004", "Limonada de coco", 10000, 15, 350, false));
-        //                                 código     nombre  precio stock unidades recienHorneado
+        //                                código    nombre  precio stock unidades recienHorneado
         brunch.agregarAlMenu(new Panaderia("PAN-001", "Pandequeso", 3500, 12, 2, true));
         brunch.agregarAlMenu(new Panaderia("PAN-002", "Buñuelo", 3000, 5, 3, false));
         for (ProductoMenu p : brunch.getMenu()) {
@@ -41,7 +42,7 @@ public class Main {
         System.out.println("Se acabó el chócolo. ¿Se puede vender 1 arepa? " + arepa.puedeVender(1));
 
         System.out.println("\n=== 3. Mesas ===");
-        brunch.agregarMesa(new Mesa("1", 2));
+        brunch.agregarMesa(new Mesa(1, 2));
         brunch.agregarMesa(new Mesa(2, 4));
         brunch.agregarMesa(new Mesa(3, 6));
         Mesa mesaTres = brunch.buscarMesa(3);
