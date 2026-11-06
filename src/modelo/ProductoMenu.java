@@ -77,6 +77,9 @@ public abstract class ProductoMenu implements Identificable, Cobrable {
     /** true si el producto no lleva carne. */
     public abstract boolean esVegetariano();
 
+    /** Dónde se prepara: "Cocina", "Barra" u "Horno". Cada tipo de producto sabe la suya. */
+    public abstract String getEstacion();
+
     @Override
     public String obtenerFicha() {
         return getCategoria() + " [" + codigo + "] " + nombre + " - $"

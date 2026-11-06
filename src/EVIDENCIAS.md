@@ -37,9 +37,19 @@
 | 9 | `Brunch.buscarProducto()` | Comparaba `String` con `==` (compara referencias, no contenido) y además debía ignorar mayúsculas | Sección 2, `Buscar pan-001: Pandequeso` | `p.getCodigo().equalsIgnoreCase(codigo)` |
 | 10 | `Brunch.cerrarPedido()` | Marcaba el pedido como pagado pero no liberaba la mesa, como pide el comentario | Sección 6, `¿Mesa 3 libre? true` y `¿Abrió el siguiente grupo? true` | Se agregó `pedido.getMesa().liberar();` |
 
+## 3. Revisión de código
+
+| # | Archivo y método | Por qué era una mala práctica | Qué cambiamos |
+|---|------------------|-------------------------------|---------------|
+| R1 | `LineaPedido.obtenerEstacion()` | Polimorfismo desaprovechado: una cadena de `instanceof` decidía la estación. Si mañana llega `Postre`, habría que abrir `LineaPedido` y agregar otro `else if`; si se olvida, sale «Sin estación» sin ningún aviso. La estación es un dato del producto, no de la línea | Se agregó `public abstract String getEstacion();` en `ProductoMenu`, implementado en `PlatoFuerte` («Cocina»), `Bebida` («Barra») y `Panaderia` («Horno»). `obtenerEstacion()` sigue existiendo y ahora solo hace `return producto.getEstacion();`. Una clase nueva no compila si no dice su estación |
+| R2 | `Pedido.calcularDescuento()`, `calcularImpoconsumo()`, `calcularPropina()` | Números mágicos: `4`, `150000`, `0.10`, `0.08` y otro `0.10` no dicen qué significan, y los dos `0.10` (descuento y propina) parecen lo mismo sin serlo | Constantes con nombre, como en `Bebida` y `PlatoFuerte`: `PERSONAS_PLAN_FAMILIAR`, `SUBTOTAL_MINIMO_PLAN_FAMILIAR`, `PORCENTAJE_DESCUENTO_FAMILIAR`, `PORCENTAJE_IMPOCONSUMO`, `PORCENTAJE_PROPINA` |
+| R3 | `Pedido`: impoconsumo, propina, total y descuento | Código duplicado: `calcularSubtotal() - calcularDescuento()` se repetía en tres métodos, y `calcularDescuento()` llamaba dos veces a `calcularSubtotal()`. Si la regla de la base cambia, hay que acordarse de cambiarla en tres sitios | Método privado `calcularBaseConDescuento()`, usado por impoconsumo, propina y total. En el descuento, el subtotal se calcula una vez y se guarda en una variable local |
+| R4 | `Brunch.getMenu()` | Lista interna expuesta: retornaba la misma `ArrayList`, así que desde afuera se podía hacer `getMenu().clear()` o agregar productos sin pasar por `agregarAlMenu` (que valida `null`) | Retorna `new ArrayList<>(menu)`, igual que `Pedido.getLineas()`. La firma pública no cambió |
+| R5 | `Brunch.v(ProductoMenu p, int c)` | Código difícil de leer: el nombre `v` y los parámetros `p`, `c` no dicen nada; además, `== true` y la variable `r` con `if/else` sobran para retornar un `boolean` | Se renombró a `sePuedeVender(ProductoMenu producto, int cantidad)` con cuerpo de una línea: `return producto != null && producto.puedeVender(cantidad);` |
+
 ## 4. Salida final del programa
 
-Salida de la fase 2 (`java -cp out Main`), coincide fila por fila con la tabla de resultados esperados:
+Salida final (`java -cp out Main`). Es la misma en la fase 2 y en la fase 3, y coincide fila por fila con la tabla de resultados esperados:
 
 ```text
 === 1. Carta del domingo ===

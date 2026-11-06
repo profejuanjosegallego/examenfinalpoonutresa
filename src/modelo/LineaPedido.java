@@ -38,14 +38,7 @@ public class LineaPedido implements Cobrable {
 
     /** Dónde se prepara: los platos en Cocina, las bebidas en Barra y la panadería en Horno. */
     public String obtenerEstacion() {
-        if (producto instanceof PlatoFuerte) {
-            return "Cocina";
-        } else if (producto instanceof Bebida) {
-            return "Barra";
-        } else if (producto instanceof Panaderia) {
-            return "Horno";
-        }
-        return "Sin estación";
+        return producto.getEstacion();
     }
 
     public String obtenerComanda() {

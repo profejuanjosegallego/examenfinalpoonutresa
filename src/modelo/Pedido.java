@@ -4,6 +4,12 @@ import java.util.ArrayList;
 
 /** La cuenta de una mesa. */
 public class Pedido implements Identificable, Cobrable {
+    public static final int PERSONAS_PLAN_FAMILIAR = 4;
+    public static final double SUBTOTAL_MINIMO_PLAN_FAMILIAR = 150000;
+    public static final double PORCENTAJE_DESCUENTO_FAMILIAR = 0.10;
+    public static final double PORCENTAJE_IMPOCONSUMO = 0.08;
+    public static final double PORCENTAJE_PROPINA = 0.10;
+
     private final String codigo;
     private final Mesa mesa;
     private final int personas;
@@ -53,15 +59,21 @@ public class Pedido implements Identificable, Cobrable {
 
     /** Plan familiar: 10 % si son 4 o más personas Y el subtotal llega a $150.000. */
     public double calcularDescuento() {
-        if (personas >= 4 && calcularSubtotal() >= 150000) {
-            return calcularSubtotal() * 0.10;
+        double subtotal = calcularSubtotal();
+        if (personas >= PERSONAS_PLAN_FAMILIAR && subtotal >= SUBTOTAL_MINIMO_PLAN_FAMILIAR) {
+            return subtotal * PORCENTAJE_DESCUENTO_FAMILIAR;
         }
         return 0;
     }
 
+    /** Lo que queda después del descuento: base del impoconsumo y de la propina. */
+    private double calcularBaseConDescuento() {
+        return calcularSubtotal() - calcularDescuento();
+    }
+
     /** Impoconsumo del 8 % sobre lo que queda después del descuento. */
     public double calcularImpoconsumo() {
-        return (calcularSubtotal() - calcularDescuento()) * 0.08;
+        return calcularBaseConDescuento() * PORCENTAJE_IMPOCONSUMO;
     }
 
     /** Propina voluntaria del 10 %, después del descuento y SIN incluir el impoconsumo. */
@@ -69,13 +81,13 @@ public class Pedido implements Identificable, Cobrable {
         if (!aceptaPropina) {
             return 0;
         }
-        return (calcularSubtotal() - calcularDescuento()) * 0.10;
+        return calcularBaseConDescuento() * PORCENTAJE_PROPINA;
     }
 
     /** Total a pagar: subtotal - descuento + impoconsumo + propina. */
     @Override
     public double calcularPrecio() {
-        return calcularSubtotal() - calcularDescuento() + calcularImpoconsumo() + calcularPropina();
+        return calcularBaseConDescuento() + calcularImpoconsumo() + calcularPropina();
     }
 
     /** El pedido sale cuando termina el producto MÁS demorado (la cocina trabaja en paralelo). */
