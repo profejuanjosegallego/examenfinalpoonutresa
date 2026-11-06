@@ -2,7 +2,6 @@ package modelo;
 
 import java.util.ArrayList;
 
-/** La cuenta de una mesa. */
 public class Pedido implements Identificable, Cobrable {
     private final String codigo;
     private final Mesa mesa;
@@ -44,18 +43,22 @@ public class Pedido implements Identificable, Cobrable {
     public double calcularSubtotal() {
         double total = 0;
         for (LineaPedido linea : lineas) {
-            total += linea.calcularPrecio();
+            if (linea != null) {
+                total += linea.calcularPrecio();
+            }
         }
         return total;
     }
     public double calcularDescuento() {
-        if (personas >= 4 || calcularSubtotal() >= 150000) {
-            return calcularSubtotal() * 0.10;
+        if (personas >= 4 && calcularSubtotal() >= 150000) {
+            return (calcularSubtotal() - calcularDescuento()) * 0.10;
         }
         return 0;
     }
+    
     public double calcularImpoconsumo() {
-        return calcularSubtotal() * 0.08;
+        double subtotalConDescuento = calcularSubtotal() - calcularDescuento(); 
+        return subtotalConDescuento * 0.08;
     }
     public double calcularPropina() {
         if (!aceptaPropina) {

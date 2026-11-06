@@ -2,7 +2,6 @@ package modelo;
 
 import java.util.ArrayList;
 
-/** Un renglón de la cuenta: un producto, cuántos se piden y sus adiciones. */
 public class LineaPedido implements Cobrable {
     private final ProductoMenu producto;
     private final int cantidad;
@@ -26,7 +25,6 @@ public class LineaPedido implements Cobrable {
         }
     }
 
-    /** CADA unidad lleva sus adiciones: (precio del producto + adiciones) × cantidad. */
     @Override
     public double calcularPrecio() {
         double sumaAdiciones = 0;
@@ -36,7 +34,6 @@ public class LineaPedido implements Cobrable {
         return (producto.calcularPrecio() + sumaAdiciones) * cantidad;
     }
 
-    /** Dónde se prepara: los platos en Cocina, las bebidas en Barra y la panadería en Horno. */
     public String obtenerEstacion() {
         if (producto instanceof PlatoFuerte) {
             return "Cocina";

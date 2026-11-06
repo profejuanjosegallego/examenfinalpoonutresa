@@ -40,7 +40,7 @@ public class Brunch {
 
     public ProductoMenu buscarProducto(String codigo) {
         for (ProductoMenu p : menu) {
-            if (p.getCodigo().equalsIgnoreCase(codigo)) {
+            if (p.getCodigo() != null && p.getCodigo().equalsIgnoreCase(codigo)) {
                 return p;
             }
         }
@@ -74,13 +74,10 @@ public class Brunch {
     }
 
     private boolean v(ProductoMenu p, int c) {
-        boolean r;
-        if (p != null && p.puedeVender(c) == true) {
-            r = true;
-        } else {
-            r = false;
+        if (p != null && p.puedeVender(c)) {
+            return true;
         }
-        return r;
+        return false;
     }
 
     public LineaPedido agregarAlPedido(Pedido pedido, String codigoProducto, int cantidad) {
@@ -96,10 +93,18 @@ public class Brunch {
     }
 
     public boolean cerrarPedido(Pedido pedido) {
+        // CORREGIDO: Validación inicial para evitar nulos o dobles cierres
         if (pedido == null || pedido.isPagado()) {
             return false;
         }
+        
         pedido.marcarPagado();
+        
+        // Liberar la mesa asociada al cerrar la cuenta
+        if (pedido.getMesa() != null) {
+            pedido.getMesa().liberar();
+        }
+        
         return true;
     }
 

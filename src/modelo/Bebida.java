@@ -17,7 +17,6 @@ public class Bebida extends ProductoMenu {
     public int getMililitros() { return mililitros; }
     public boolean isCaliente() { return caliente; }
 
-    /** Las bebidas de 500 ml o más son tamaño grande y suben $2.500. */
     @Override
     public double calcularPrecio() {
         if (mililitros >= MILILITROS_TAMANO_GRANDE) {
@@ -26,7 +25,6 @@ public class Bebida extends ProductoMenu {
         return super.calcularPrecio();
     }
 
-    /** Las calientes salen en 4 minutos; las frías, en 6. */
     @Override
     public int minutosPreparacion() {
         return caliente ? 4 : 6;
